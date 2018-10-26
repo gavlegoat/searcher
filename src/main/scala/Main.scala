@@ -1,16 +1,18 @@
-import java.awt.event.ActionEvent
-
+import java.awt._
 import javax.swing._
 
 object Main {
+
+  val frame = new JFrame()
+
   def main(args: Array[String]): Unit = {
-    val frame = new JFrame()
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-    frame.setSize(200, 200)
+    //frame.setExtendedState(JFrame.MAXIMIZED_BOTH)
+    // For some reason it looks like MAXIMIZED_BOTH is not being recognized
+    // as a member of JFrame
+    frame.setSize(new Dimension(1000, 800));
     frame.setLocationRelativeTo(null)
-    val button = new JButton("Quit")
-    button.addActionListener((e: ActionEvent) => System.exit(0))
-    frame.add(button)
+    frame.add(MainPanel)
     frame.setVisible(true)
   }
 }
