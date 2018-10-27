@@ -1,11 +1,9 @@
-import java.awt.Component
-import java.awt.GridLayout
+import java.awt.{BorderLayout, Component, FlowLayout, GridLayout}
+
 import javax.swing._
 
 object MainPanel extends JPanel {
-  val labelWidth = 100
-  val inputWidth = 500
-  val rowHeight = 30
+  setSize(1000, 800);
 
   val scryfall = new JTextField()
   val nameField = new JTextField()
@@ -28,20 +26,27 @@ object MainPanel extends JPanel {
     RaritySelector, PriceSelector, artistField, flavorField)
 
   val labels: Seq[String] = List("Formatted Search:", "Name:", "Oracle Text:",
-    "Type Line:", "Colors:", "Color ID:", "Mana Cost:", "Stats:", "Format Legality:",
-    "Set:", "Block:", "Rarity:", "Price:", "Artist:", "Flavor Text:")
+    "Type Line:", "Colors:", "Color ID:", "Mana Cost:", "Stats:",
+    "Format Legality:", "Set:", "Block:", "Rarity:", "Price:", "Artist:",
+    "Flavor Text:")
 
-  setLayout(new GridLayout(0, 2))
+  //setLayout(new GridLayout(0, 2, 30, 20))
+
+  val leftPanel = new JPanel(new GridLayout(0, 1, 30, 20))
+  val rightPanel = new JPanel(new GridLayout(0, 1, 30, 20))
 
   (fields zip labels).foreach(pair => {
-    add(new JLabel(pair._2))
-    add(pair._1)
+    leftPanel.add(new JLabel(pair._2, SwingConstants.RIGHT))
+    rightPanel.add(pair._1)
   })
 
   val submit = new JButton("Submit")
   // TODO: Add an ActionListener
-  add(new JLabel(""))
-  add(submit)
+
+  setLayout(new BorderLayout(30, 20))
+  add(leftPanel, BorderLayout.WEST)
+  add(rightPanel, BorderLayout.CENTER)
+  add(submit, BorderLayout.SOUTH)
 
   def createQuery(): String = {
     if (scryfall.getText().equals("")) {
