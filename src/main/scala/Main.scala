@@ -1,4 +1,3 @@
-import java.awt._
 import javax.swing._
 
 object Main {

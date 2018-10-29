@@ -1,4 +1,4 @@
-import java.awt.{BorderLayout, Component, FlowLayout, GridLayout}
+import java.awt.{BorderLayout, Component, GridLayout}
 
 import javax.swing._
 
@@ -67,7 +67,9 @@ object MainPanel extends JPanel {
 
   val submit = new JButton("Submit")
   submit.addActionListener(_ => {
-    System.out.println("<<< " + createQuery() + " >>>")
+    val rf = new ResultsFrame(createQuery(),
+      CriteriaPanel.usernameField.getText())
+    rf.setVisible(true)
   })
 
   setLayout(new BorderLayout(30, 20))

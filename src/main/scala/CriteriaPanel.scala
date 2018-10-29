@@ -1,12 +1,14 @@
-import java.awt.{Dimension, FlowLayout}
+import java.awt.{BorderLayout, Dimension, FlowLayout}
 
 import javax.swing._
 
 import scala.collection.mutable.ListBuffer
 
+
 object CriteriaPanel extends JPanel {
-  setPreferredSize(new Dimension(300, 800))
-  setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS))
+  var pb = new JProgressBar(0, 100)
+  pb.setValue(0)
+  pb.setStringPainted(true)
 
   val usernamePanel = new JPanel()
   usernamePanel.setLayout(new FlowLayout())
@@ -15,6 +17,40 @@ object CriteriaPanel extends JPanel {
   usernameField.setColumns(20)
   usernamePanel.add(usernameField)
   add(usernamePanel)
+
+  class Task(frame: JFrame) extends SwingWorker[Unit, Unit] {
+    override def doInBackground(): Unit = {
+      InventoryManager.loadCollection(usernameField.getText(), v => {
+        setProgress(v)
+      })
+    }
+
+    override def done(): Unit = {
+      frame.dispose()
+    }
+  }
+
+  setPreferredSize(new Dimension(300, 800))
+  setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS))
+
+  val usernameButton = new JButton("Load Collection")
+  usernameButton.addActionListener(_ => {
+    val pbFrame = new JFrame("Progress")
+    pbFrame.setLayout(new BorderLayout())
+    pbFrame.setLocationRelativeTo(null)
+    pbFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
+    pbFrame.add(pb, BorderLayout.CENTER)
+    pbFrame.pack()
+    pbFrame.setVisible(true)
+    val task = new Task(pbFrame)
+    task.addPropertyChangeListener(e => {
+      if ("progress" == e.getPropertyName) {
+        pb.setValue(e.getNewValue.asInstanceOf[Int])
+      }
+    })
+    task.execute()
+  })
+  add(usernameButton)
   add(new JSeparator(SwingConstants.HORIZONTAL))
 
   var search_strings: ListBuffer[String] = ListBuffer()
